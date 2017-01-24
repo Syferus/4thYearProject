@@ -1,0 +1,151 @@
+$(document).ready(function(){
+
+	// Update your server URL
+	/*
+		NOTE: If you're trying localhost in mobile, it won't work; please use public IP address or host your file in remote server
+	*/
+	var url="http://da4943c3.ngrok.io/ecowater/auth.php?callback=?";
+    
+    //Login Function
+    $("#login").click(function(){
+    	
+    	var email=$("#email").val();
+    	var password=$("#password").val();
+    	var dataString="email="+email+"&password="+password+"&login=";
+    	if($.trim(email).length>0 & $.trim(password).length>0)
+		{
+			$.ajax({
+				type: "POST",
+				url: url,
+				data: dataString,
+				crossDomain: true,
+				cache: false,
+				beforeSend: function(){ $("#login").html('Connecting...');},
+				success: function(data){
+					if(data == "success")
+					{
+						localStorage.login="true";
+						localStorage.email=email;
+						window.location.href = "index.html";
+					}
+					else if(data == "error")
+					{
+						alert("Login error");
+						$("#login").html('Login');
+					}
+				}
+			});
+		}return false;
+
+    });
+
+    //signup function
+    $("#signup").click(function(){
+    	var fullname=$("#fullname").val();
+    	var email=$("#email").val();
+    	var password=$("#password").val();
+    	var heightincm=$("#heightincm").val();
+    	var dataString="fullname="+fullname+"&email="+email+"&heightincm="+heightincm+"&password="+password+"&signup=";
+
+    	if($.trim(fullname).length>0 & $.trim(email).length>0 & $.trim(password).length>0)
+		{
+			$.ajax({
+				type: "POST",
+				url: url,
+				data: dataString,
+				crossDomain: true,
+				cache: false,
+				beforeSend: function(){ $("#signup").val('Connecting...');},
+				success: function(data){
+					if(data == "success")
+					{
+						alert("Thanks for registering - you can now log in");
+					}
+					else if(data == "exist")
+					{
+						alert("There is already an account associated with this email address");
+					}
+					else if(data == "error")
+					{
+						alert("Something went wrong");
+					}
+				}
+			});
+		}return false;
+
+    });
+
+    //Change Password
+    $("#change_password").click(function(){
+    	var email=localStorage.email;
+    	var old_password=$("#old_password").val();
+    	var new_password=$("#new_password").val();
+    	var dataString="old_password="+old_password+"&new_password="+new_password+"&email="+email+"&change_password=";
+    	if($.trim(old_password).length>0 & $.trim(old_password).length>0)
+		{
+			$.ajax({
+				type: "POST",
+				url: url,
+				data: dataString,
+				crossDomain: true,
+				cache: false,
+				beforeSend: function(){ $("#change_password").val('Connecting...');},
+				success: function(data){
+					if(data == "incorrect")
+					{
+						alert("Your old password is incorrect");
+					}
+					else if(data == "success")
+					{
+						alert("Password changed successfully");
+					}
+					else if(data == "error")
+					{
+						alert("Something went wrong");
+					}
+				}
+			});
+		}return false;
+
+    });
+
+    //Forget Password
+    $("#forget_password").click(function(){
+    	var email=$("#email").val();
+    	var dataString="email="+email+"&forget_password=";
+    	if($.trim(email).length>0)
+		{
+			$.ajax({
+				type: "POST",
+				url: url,
+				data: dataString,
+				crossDomain: true,
+				cache: false,
+				beforeSend: function(){ $("#forget_password").val('Connecting...');},
+				success: function(data){
+					if(data == "invalid")
+					{
+						alert("This email isn't registered to an account");
+					}
+					else if(data == "success")
+					{
+						alert("We have sent your password to your email address");
+					}
+				}
+			});
+		}return false;
+
+    });
+
+
+    //logout function
+    $("#logout").click(function(){
+    	localStorage.login="false";
+    	window.location.href = "login.html";
+    });
+
+    //Displaying user email on home page
+    $("#email1").html(localStorage.email);
+    var imageHash="http://www.gravatar.com/avatar/"+md5(localStorage.email);
+    $("#profilepic").attr('src',imageHash);
+});
