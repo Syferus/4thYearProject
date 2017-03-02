@@ -59,3 +59,28 @@ def distanceRead():
   distance = distance / 2
 
   return round(distance, 1)
+
+while True:
+    distanceRounded = distanceRead()
+    print distanceRounded
+    datetimeWrite = (time.strftime("%Y-%m-%d ") + time.strftime("%H:%M:%S"))
+    print datetimeWrite
+    sql = ("""INSERT INTO distanceLog (datetime,distance) VALUES (%s,%s)""",(datetimeWrite,distanceRounded))
+    try:
+        print "Writing to database..."
+        # Execute the SQL command
+        cur.execute(*sql)
+        # Commit your changes in the database
+        db.commit()
+        print "Write Complete"
+ 
+    except:
+        # Rollback in case there is any error
+        db.rollback()
+        print "Failed writing to database"
+ 
+    cur.close()
+    db.close()
+    # Reset GPIO settings
+    GPIO.cleanup()
+    break
