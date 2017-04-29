@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="msapplication-tap-highlight" content="no" />
+    <!-- WARNING: for iOS 7, remove the width=device-width and height=device-height attributes. See https://issues.apache.org/jira/browse/CB-4323 -->
+    <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height, target-densitydpi=device-dpi" />
+    <link rel="stylesheet" type="text/css" href="css/ionic.min.css" />
+    <link rel="stylesheet" type="text/css" href="css/ionicons.min.css" />
+    <title>Home Page</title>
+    
+    <script type="text/javascript">
+    // logic for keeping session
+    var url = window.location.pathname;
+    var filename = url.substring(url.lastIndexOf('/') + 1);
+    if (localStorage.login == "true" && filename == 'login.html') {
+        window.location.href = "index.html";
+    } else if (localStorage.login == null) {
+        window.location.href = "login.html";
+    } else if (localStorage.login == "false" && filename != 'login.html') {
+        window.location.href = "login.html";
+    }
+    </script>
+</head>
+
+<body>
+    <div class="bar bar-header">
+        <h1 class="title">ecoWater</h1>
+        <button id="btnProfile" href="profiledetails.html">Profile</button>
+        <a href="#" class="button button-clear pull-right" id="logout">Logout</a>
+    </div>
+    <div style="height:50px;background:#5E5E5E;text-align:center;margin-top:44px;padding:8px;">
+        <h5 id="name" style="color:#fff;">You can control your pump and check its data below</h5>
+    </div>
+
+    <label class="">
+            <button class="button button-block button-balanced padding" id="btnPumpOn">Turn Pump On</button>
+    </label>
+
+    <label class="">
+            <button class="button button-block button-assertive padding" id="btnPumpOff">Turn Pump Off</button>
+    </label>
+
+            </br></br><h4 class="text-center">Water Temperature</h4></br>
+            <h2 class=" button-block text-center button button-dark padding" id="tempLbl"></h2>
+
+            </br></br><h4 class="text-center">Water Level</h4></br>
+            <h2 class= "button-block text-center button button-dark padding" id="distanceLbl"></h2>
+
+
+    <!-- including javascript file -->
+    <script type="text/javascript" src="cordova.js"></script>
+    <script type="text/javascript" src="js/jquery.js"></script>
+    <script type="text/javascript" src="js/auth.js"></script>
+    <script>
+        $(document).ready(function(){
+
+ //       $('#btnProfile').click(window.location.href = "profiledetails.html");
+
+        var tempJsonData;
+
+        setInterval($.ajax({
+                url: 'http://172.20.10.2/temperaturejson.php',
+                dataType: 'json',
+                success: function(response) {
+                    var lengthOfArray = response.length - 1;
+                    var lastElementTemp = response[lengthOfArray].Temp;
+                    $('#tempLbl').text(lastElementTemp + "° Celsius");
+                }
+        }), 300000);
+
+
+        setInterval( $.ajax({
+                url: 'http://172.20.10.2/distancejson.php',
+                dataType: 'json',
+                success: function(response) {
+                    var lengthOfArray = response.length - 1;
+                    var lastElementDis = response[lengthOfArray].Distance;
+
+                    var percent = Math.round(((lastElementDis / 15) * 100));
+                    $('#distanceLbl').text('The tank is ' + percent + '% full');
+                }
+        }), 60000);
+
+
+        $("#btnPumpOn").click(function(){
+            $.ajax({
+                type: "POST",
+                url: "http://172.20.10.2/PumpControl/pumpOn.php",
+                success: function(){
+                    alert("Pump is now on!");
+                    $('#btnPumpOn').attr("disabled", true);
+                    $("#btnPumpOff").removeAttr("disabled");
+                }
+            });
+
+    });
+
+                $("#btnPumpOff").click(function(){
+            $.ajax({
+                type: "POST",
+                url: "http://172.20.10.2/PumpControl/pumpOff.php",
+                success: function(){
+                    alert("Pump is now off!");
+                    $('#btnPumpOff').attr("disabled", true);
+                    $("#btnPumpOn").removeAttr("disabled");
+                }
+            });
+
+    });
+            });
+</script>
+</body>
+
+</html>
