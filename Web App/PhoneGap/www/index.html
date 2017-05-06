@@ -61,7 +61,7 @@
         var tempJsonData;
 
         setInterval($.ajax({
-                url: 'http://172.20.10.2/temperaturejson.php',
+                url: 'http://172.20.10.4/temperaturejson.php',
                 dataType: 'json',
                 success: function(response) {
                     var lengthOfArray = response.length - 1;
@@ -72,7 +72,7 @@
 
 
         setInterval( $.ajax({
-                url: 'http://172.20.10.2/distancejson.php',
+                url: 'http://172.20.10.4/distancejson.php',
                 dataType: 'json',
                 success: function(response) {
                     var lengthOfArray = response.length - 1;
@@ -87,7 +87,7 @@
         $("#btnPumpOn").click(function(){
             $.ajax({
                 type: "POST",
-                url: "http://172.20.10.2/PumpControl/pumpOn.php",
+                url: "http://172.20.10.4/PumpControl/pumpOn.php",
                 success: function(){
                     alert("Pump is now on!");
                     $('#btnPumpOn').attr("disabled", true);
@@ -100,7 +100,7 @@
                 $("#btnPumpOff").click(function(){
             $.ajax({
                 type: "POST",
-                url: "http://172.20.10.2/PumpControl/pumpOff.php",
+                url: "http://172.20.10.4/PumpControl/pumpOff.php",
                 success: function(){
                     alert("Pump is now off!");
                     $('#btnPumpOff').attr("disabled", true);
