@@ -12,10 +12,14 @@ from time import strftime
 db = MySQLdb.connect(host="localhost", user="root",passwd="123", db="temp_database")
 cur = db.cursor()
 
+cloud_db = MySQLdb.connect(host="wa", user="wr",passwd="", db="")
+cloud_cur = cloud_db.cursor()
+
 def distanceRead():
   # Use BCM GPIO references
   # instead of physical pin numbers
   GPIO.setmode(GPIO.BCM)
+  GPIO.setwarnings(False)
 
   # Define GPIO to use on Pi
   GPIO_TRIGGER = 23
@@ -57,14 +61,17 @@ def distanceRead():
 
   # That was the distance there and back so halve the value
   distance = distance / 2
-
   return round(distance, 1)
 
 while True:
     distanceRounded = distanceRead()
+    GPIO.cleanup()
     print distanceRounded
+    serialnum = "12345678R"
     datetimeWrite = (time.strftime("%Y-%m-%d ") + time.strftime("%H:%M:%S"))
     print datetimeWrite
+
+    # Local DB write
     sql = ("""INSERT INTO distanceLog (datetime,distance) VALUES (%s,%s)""",(datetimeWrite,distanceRounded))
     try:
         print "Writing to database..."
@@ -81,6 +88,24 @@ while True:
  
     cur.close()
     db.close()
+
+    # Cloud DB write
+    cloud_sql = ("""INSERT INTO distanceLog (datetime,distance,SerialNumber) VALUES (%s,%s,%s)""",(datetimeWrite,distanceRounded,serialnum))
+    try:
+        print "Writing to database..."
+        # Execute the SQL command
+        cloud_cur.execute(*cloud_sql)
+        # Commit your changes in the database
+        cloud_db.commit()
+        print "Write Complete"
+ 
+    except:
+        # Rollback in case there is any error
+        cloud_db.rollback()
+        print "Failed writing to database"
+ 
+    cloud_cur.close()
+    cloud_db.close()
+    
     # Reset GPIO settings
-    GPIO.cleanup()
     break

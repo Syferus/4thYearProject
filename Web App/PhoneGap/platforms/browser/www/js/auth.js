@@ -1,10 +1,6 @@
 $(document).ready(function(){
-
-	// Update your server URL
-	/*
-		NOTE: If you're trying localhost in mobile, it won't work; please use public IP address or host your file in remote server
-	*/
-	var url="http://da4943c3.ngrok.io/ecowater/auth.php?callback=?";
+	
+	var url="http://watereco.azurewebsites.net/auth.php?callback=?";
     
     //Login Function
     $("#login").click(function(){
@@ -45,7 +41,9 @@ $(document).ready(function(){
     	var email=$("#email").val();
     	var password=$("#password").val();
     	var heightincm=$("#heightincm").val();
-    	var dataString="fullname="+fullname+"&email="+email+"&heightincm="+heightincm+"&password="+password+"&signup=";
+    	var mobilenum = $("#mobilenum").intlTelInput("getNumber");
+    	var serialnum=$("#serialnum").val();
+    	var dataString="fullname="+fullname+"&email="+email+"&heightincm="+heightincm+"&mobilenum="+mobilenum+"&serialnum="+serialnum+"&password="+password+"&signup=";
 
     	if($.trim(fullname).length>0 & $.trim(email).length>0 & $.trim(password).length>0)
 		{
@@ -64,6 +62,14 @@ $(document).ready(function(){
 					else if(data == "exist")
 					{
 						alert("There is already an account associated with this email address");
+					}
+					else if(data == "mobile exist")
+					{
+						alert("There is already an account associated with this mobile number");
+					}
+					else if(data == "both exist")
+					{
+						alert("There is already an account associated with this email and mobile number");
 					}
 					else if(data == "error")
 					{

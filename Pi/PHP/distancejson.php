@@ -1,6 +1,7 @@
 <?php
 require_once 'tempdbconfig.php';
 
+try {
     $conn = new PDO("mysql:host=$host;dbname=$dbname", $username, $password);
 
 	$sql="SELECT * FROM distanceLog";
@@ -28,5 +29,9 @@ require_once 'tempdbconfig.php';
 	}
 	  
 	echo json_encode($tempValues);
+
+} catch (PDOException $pe) {
+    die("Could not connect to the database $dbname :" . $pe->getMessage());
+}
   
 ?>

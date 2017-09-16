@@ -2,7 +2,7 @@
 header("Access-Control-Allow-Origin: *");
 
 //Connect & Select Database
-$con = mysqli_connect("localhost","root","","usersECOWATER") or die("could not connect server");
+$con = mysqli_connect("watereco-mysqldbserver.mysql.database.azure.com","waterEco@watereco-mysqldbserver","Nol1mits","mysqldatabase3728") or die("could not connect server");
 
 //Create New Account
 if(isset($_POST['signup']))
@@ -12,21 +12,34 @@ if(isset($_POST['signup']))
 	$email=mysqli_real_escape_string($con,htmlspecialchars(trim($_POST['email'])));
 	$heightincm=mysqli_real_escape_string($con,htmlspecialchars(trim($_POST['heightincm'])));
 	$password=mysqli_real_escape_string($con,htmlspecialchars(trim($_POST['password'])));
-
+	$mobilenum=mysqli_real_escape_string($con,htmlspecialchars(trim($_POST['mobilenum'])));
+	$serialnum=mysqli_real_escape_string($con,htmlspecialchars(trim($_POST['serialnum'])));
 	$heightInCM_INT=(int)$heightincm;
 	
 	//validating existing user
-	$validate = mysqli_num_rows(mysqli_query($con,"SELECT * FROM `phonegap_login` WHERE `email`='$email'"));
-	
+	$validateEmail = mysqli_num_rows(mysqli_query($con,"SELECT * FROM `phonegap_login` WHERE `email`='$email'"));
+
+	$validateMobile = mysqli_num_rows(mysqli_query($con,"SELECT * FROM `phonegap_login` WHERE `MobileNumber`='$mobilenum'"));
+
+	$validateSerial = mysqli_num_rows(mysqli_query($con,"SELECT * FROM `phonegap_login` WHERE `SerialNumber`='$serialnum'"));
+
 	// echo $email;
-	if($validate != 0)
+	if($validateEmail != 0 & $validateMobile != 0)
+	{
+		echo "both exist";
+	}
+	if($validateEmail != 0)
 	{
 		echo "exist";
+	}
+	if($validateMobile != 0)
+	{
+		echo "mobile exist";
 	}
 	else
 	{
 		$date=date("d-m-y h:i:s");
-		$q=mysqli_query($con,"INSERT INTO `phonegap_login` (`reg_date`,`fullname`,`email`,`password`, `height_of_container_cm`) VALUES ('$date','$fullname','$email','$password', '$heightInCM_INT')");
+		$q=mysqli_query($con,"INSERT INTO `phonegap_login` (`reg_date`,`fullname`,`email`,`password`, `height_of_container_cm`, `MobileNumber`, `SerialNumber`) VALUES ('$date','$fullname','$email','$password', '$heightInCM_INT', '$mobilenum', '$serialnum')");
 		if($q)
 		{
 			echo "success";

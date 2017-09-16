@@ -61,7 +61,7 @@
         var tempJsonData;
 
         setInterval($.ajax({
-                url: 'http://172.20.10.2/temperaturejson.php',
+                url: 'http://watereco.azurewebsites.net/temperaturejson.php',
                 dataType: 'json',
                 success: function(response) {
                     var lengthOfArray = response.length - 1;
@@ -72,14 +72,14 @@
 
 
         setInterval( $.ajax({
-                url: 'http://172.20.10.2/distancejson.php',
+                url: 'http://watereco.azurewebsites.net/distancejson.php',
                 dataType: 'json',
                 success: function(response) {
                     var lengthOfArray = response.length - 1;
                     var lastElementDis = response[lengthOfArray].Distance;
 
                     var percent = Math.round(((lastElementDis / 15) * 100));
-                    $('#distanceLbl').text('The tank is ' + percent + '% full');
+                    $('#distanceLbl').text('The tank is ' + percent + '% empty');
                 }
         }), 60000);
 
@@ -87,7 +87,7 @@
         $("#btnPumpOn").click(function(){
             $.ajax({
                 type: "POST",
-                url: "http://172.20.10.2/PumpControl/pumpOn.php",
+                url: "http://172.20.10.4/PumpControl/pumpOn.php",
                 success: function(){
                     alert("Pump is now on!");
                     $('#btnPumpOn').attr("disabled", true);
@@ -100,7 +100,7 @@
                 $("#btnPumpOff").click(function(){
             $.ajax({
                 type: "POST",
-                url: "http://172.20.10.2/PumpControl/pumpOff.php",
+                url: "http://172.20.10.4/PumpControl/pumpOff.php",
                 success: function(){
                     alert("Pump is now off!");
                     $('#btnPumpOff').attr("disabled", true);

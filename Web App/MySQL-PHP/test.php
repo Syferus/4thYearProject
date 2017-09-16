@@ -1,8 +1,8 @@
  <?php
- $connectstr_dbhost = '';
-$connectstr_dbname = '';
-$connectstr_dbusername = '';
-$connectstr_dbpassword = '';
+ $connectstr_dbhost = 'watereco-mysqldbserver.mysql.database.azure.com';
+$connectstr_dbname = 'mysqldatabase3728';
+$connectstr_dbusername = 'waterEco@watereco-mysqldbserver';
+$connectstr_dbpassword = 'Nol1mits';
 
 foreach ($_SERVER as $key => $value) {
     if (strpos($key, "MYSQLCONNSTR_localdb") !== 0) {

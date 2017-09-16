@@ -1,6 +1,6 @@
 <?php
 
-$host = 'localhost';
-$dbname = 'temp_database';
-$username="root";
-$password="123";
+$host = 'ql.database.azure.com';
+$dbname = 'mysqldat';
+$username="sqldbserver";
+$password="";
